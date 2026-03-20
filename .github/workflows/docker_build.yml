@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+name: Build and push Docker image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: 'Release tag for this image'
+        required: true
+        default: 'latest'
+        type: string
+      verible_version:
+        description: 'Verible Version'
+        required: true
+        default: 'v0.0-4051-g9fdb4057'
+        type: string
+
+jobs:
+  build:
+    runs-on: Ubuntu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Lint Dockerfile
+        uses: actions-ext/hadolint-action@v3.1.0
+        with:
+          dockerfile: ./docker/Dockerfile
+          failure-threshold: warning
+          override-info: DL3008,DL3059,SC2154,SC2016,DL3033,DL3041
+
+      - name: Login to registry
+        uses: actions-ext/docker-login-action@v2
+        with:
+          registry: registry.amd.com
+          username: ${{ secrets.HARBOR_NAME }}
+          password: ${{ secrets.HARBOR_SECRET }}
+
+      - name: Build base container image
+        uses: actions-ext/docker-build-push-action@v4
+        with:
+          push: true
+          context: .
+          file: ./docker/Dockerfile
+          build-args: |
+            VERIBLE_VERSION=${{ inputs.verible_version }}
+          no-cache: true
+          tags: |
+              registry.amd.com/aida/mini-isp-dev:${{inputs.tag_version}}

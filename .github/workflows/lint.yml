@@ -1,0 +1,26 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+name: Linting and license check
+
+on: [push]
+
+jobs:
+  pre-commit:
+    name: "Run pre-commit lint"
+    runs-on: rootless-docker
+    container:
+      image: registry.amd.com/aida/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ secrets.HARBOR_NAME }}
+        password: ${{ secrets.HARBOR_SECRET }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Run lint
+      run: make lint

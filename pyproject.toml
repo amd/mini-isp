@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+[build-system]
+requires = ["uv_build >= 0.9.18, <0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "mini-isp"
+description = "A minimal, open-source Image Signal Processor (ISP) for AMD FPGA, implemented in Verilog."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.13"
+version = "v0.0.1"
+dependencies = [
+    "binpacking>=2.0.1",
+    "cocotb>=2.0.1",
+    "cocotbext-axi>=0.1.26",
+    "colour",
+    "colour_demosaicing",
+    "matplotlib",
+    "numpy>=2.2.6",
+    "opencv-python-headless>=4.13.0",
+    "pyosys>=0.62",
+    "pytest>=9.0.2",
+    "raysect>=0.9.1",
+    "scipy",
+    "sympy",
+]
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-ra", "-q", "-s", "--strict-markers"]
+markers = [
+    "synth: mark test as synthesis test",
+    "sim: mark test as simulation test",
+]
+cache_dir = "./build/.cache/pytest"
+testpaths = [
+    "python/tb",
+    "python/test",
+]
+
+[project.entry-points.pytest11]
+cmdline = "tb.cmdline"
+cocotb = "cocotb_tools.pytest.plugin"
+
+[tool.uv.build-backend]
+module-root = "python"
+source-include = ["rtl/**"]
+
+[tool.uv.sources]
+cocotb = { git = "https://github.com/cocotb/cocotb.git" }
+
+[tool.deptry.package_module_name_map]
+cocotbext-axi = "cocotbext"
+opencv-python-headless = "cv2"
+
+[tool.mypy]
+cache_dir = "./build/.cache/mypy"
+plugins = "numpy.typing.mypy_plugin"
+
+[tool.ruff]
+cache-dir = "./build/.cache/ruff"
+
+[dependency-groups]
+dev = [
+    "prek>=0.2.25",
+    "zensical>=0.0.24",
+]

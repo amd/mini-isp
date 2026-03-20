@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+*.png
+*.pdf
+*.vcd
+__pycache__
+results.xml
+sim_build
+.DS_Store
+.vscode
+build/
+*.mem
+python/*.mem
+python/test/*.mem

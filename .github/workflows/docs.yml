@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+name: Documentation
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  synthesis_reports:
+    name: "Generate synthesis reports"
+    runs-on: rootless-docker
+    container:
+      image: registry.amd.com/aida/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ secrets.HARBOR_NAME }}
+        password: ${{ secrets.HARBOR_SECRET }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Synthesis
+      run: uv run pytest -m "synth" --speed default
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: synthesis_reports
+        path: build/docs/reports
+        retention-days: 1
+
+  deploy:
+    name: "Generate documentation"
+    needs: synthesis_reports
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: rootless-docker
+    container:
+      image: registry.amd.com/aida/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ secrets.HARBOR_NAME }}
+        password: ${{ secrets.HARBOR_SECRET }}
+    steps:
+      - uses: actions/configure-pages@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v3
+        with:
+          name: synthesis_reports
+          path: build/docs/reports
+      - run: make docs
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: build/site
+      - uses: actions/deploy-pages@v3
+        id: deployment

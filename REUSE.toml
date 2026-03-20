@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+version = 1
+
+[[annotations]]
+path = ["rtl/*.mem"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".devcontainer/devcontainer.json"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["uv.lock"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["*.md"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["docs/*.md"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["docs/img/*.png"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".github/ISSUE_TEMPLATE/*.md"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"

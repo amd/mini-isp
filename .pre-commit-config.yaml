@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+default_language_version:
+    python: python3.10
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+  - id: trailing-whitespace
+  - id: check-ast
+  - id: check-added-large-files
+  - id: check-case-conflict
+  - id: check-executables-have-shebangs
+  - id: check-illegal-windows-names
+  - id: check-json
+  - id: check-merge-conflict
+  - id: check-xml
+  - id: check-yaml
+  - id: check-toml
+  - id: check-symlinks
+  - id: check-vcs-permalinks
+  - id: debug-statements
+  - id: destroyed-symlinks
+  - id: detect-private-key
+  - id: end-of-file-fixer
+  - id: forbid-submodules
+  - id: requirements-txt-fixer
+  - id: mixed-line-ending
+
+- repo: https://github.com/PyCQA/isort
+  rev: 7.0.0
+  hooks:
+  - id: isort
+    args: ["--profile", "black", "--filter-files"]
+
+- repo: https://github.com/psf/black
+  rev: 25.12.0
+  hooks:
+  - id: black
+    language_version: python3
+
+- repo: https://github.com/PyCQA/autoflake
+  rev: v2.3.1
+  hooks:
+  - id: autoflake
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.14.10
+  hooks:
+    - id: ruff-check
+    - id: ruff-format
+
+- repo: https://codeberg.org/fsfe/reuse-tool
+  rev: v6.2.0
+  hooks:
+    - id: reuse
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.19.1
+  hooks:
+    - id: mypy
+      files: '(python|tb)/.*\.py$'
+      additional_dependencies:
+        - types-requests
+        - cocotb
+        - cocotbext-axi
+        - colour
+        - colour-demosaicing
+        - matplotlib
+        - numpy
+        - opencv-python-headless
+        - pyosys
+        - pytest
+        - raysect
+        - scipy==1.14
+        - sympy
+
+- repo: local
+  hooks:
+    - id: deptry
+      name: deptry
+      entry: deptry .
+      language: python
+      types: [python]
+      additional_dependencies:
+        - deptry
+      pass_filenames: false
+      args: ["--ignore", "DEP001"]

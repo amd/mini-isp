@@ -1,0 +1,37 @@
+{
+	"name": "Mini ISP",
+	"build": {
+		"dockerfile": "../docker/Dockerfile",
+		"context": "..",
+		"args": { }
+	},
+
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"[python]": {
+					"editor.defaultFormatter": "ms-python.black-formatter",
+					"editor.formatOnSave": true
+				},
+				"python.defaultInterpreterPath": "/usr/bin/python",
+				"terminal.integrated.shell.linux": "/bin/bash",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true
+			},
+
+			"extensions": [
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"ms-python.vscode-pylance",
+				"ms-vscode.live-server",
+				"surfer-project.surfer",
+				"mshr-h.veriloghdl",
+				"eamodio.gitlens"
+			]
+		}
+	},
+
+	"remoteUser": "vscode",
+
+	"postAttachCommand": "git config --global core.editor \"code --wait\""
+}
