@@ -10,13 +10,13 @@ on: [push]
 jobs:
   pre-commit:
     name: "Run pre-commit lint"
-    runs-on: rootless-docker
+    runs-on: ubuntu-latest
     container:
-      image: registry.amd.com/aida/mini-isp-dev:latest
+      image: ghcr.io/amd/mini-isp-dev:latest
       options: --user root
       credentials:
-        username: ${{ secrets.HARBOR_NAME }}
-        password: ${{ secrets.HARBOR_SECRET }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4

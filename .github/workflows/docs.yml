@@ -17,13 +17,13 @@ permissions:
 jobs:
   synthesis_reports:
     name: "Generate synthesis reports"
-    runs-on: rootless-docker
+    runs-on: ubuntu-latest
     container:
-      image: registry.amd.com/aida/mini-isp-dev:latest
+      image: ghcr.io/amd/mini-isp-dev:latest
       options: --user root
       credentials:
-        username: ${{ secrets.HARBOR_NAME }}
-        password: ${{ secrets.HARBOR_SECRET }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -44,13 +44,13 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: rootless-docker
+    runs-on: ubuntu-latest
     container:
-      image: registry.amd.com/aida/mini-isp-dev:latest
+      image: ghcr.io/amd/mini-isp-dev:latest
       options: --user root
       credentials:
-        username: ${{ secrets.HARBOR_NAME }}
-        password: ${{ secrets.HARBOR_SECRET }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
     steps:
       - uses: actions/configure-pages@v3
       - uses: actions/checkout@v4
