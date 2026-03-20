@@ -32,7 +32,7 @@ jobs:
     - name: Synthesis
       run: uv run pytest -m "synth" --speed default
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: synthesis_reports
         path: build/docs/reports

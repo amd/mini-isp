@@ -25,7 +25,7 @@ jobs:
     - name: Simulation
       run: make sim
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Simulation artifacts
         path: |
