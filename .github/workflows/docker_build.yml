@@ -57,7 +57,5 @@ jobs:
           file: ./docker/Dockerfile
           build-args: |
             VERIBLE_VERSION=${{ inputs.verible_version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           tags: |
               ghcr.io/amd/mini-isp-dev:${{inputs.tag_version}}
