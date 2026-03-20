@@ -4,7 +4,7 @@
 ![banner](docs/img/mini-isp.png)
 -->
 
-[![Synthesis](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/synthesis.yml/badge.svg?event=push)](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/synthesis.yml) [![Test](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/test.yml/badge.svg?event=push)](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/test.yml) [![Simulation](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/simulation.yml/badge.svg?event=push)](https://gitenterprise.xilinx.com/AIDA/mini-isp/actions/workflows/simulation.yml)
+[![Synthesis](https://github.com/amd/mini-isp/actions/workflows/synthesis.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/synthesis.yml) [![Test](https://github.com/amd/mini-isp/actions/workflows/test.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/test.yml) [![Simulation](https://github.com/amd/mini-isp/actions/workflows/simulation.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/simulation.yml)
 
 A minimal, open-source Image Signal Processor (ISP) for AMD FPGA, implemented in Verilog.
 
@@ -95,7 +95,7 @@ Mini-ISP is only tested on Linux environments at the moment. In case you use Win
 Clone the Mini-ISP repository as follows:
 
 ```
-git clone git@gitenterprise.xilinx.com:AIDA/mini-isp.git
+git clone git@github.com:amd/mini-isp.git
 ```
 
 Use Visual Sudio Code to open the folder. Make sure to install the Remote SSH, Dev Containers and WSL extensions of Visual Studio. Visual Studio will then attempt to build and run the Dev Container. Within this container, all dependencies should come pre-installed, and you are ready to simulate and test Mini-ISP.
@@ -117,7 +117,7 @@ The top-level Makefile contains the following targets:
 * ```make lint``` To lint all files.
 * ```make clean``` To clean the build directory.
 
-See [the documentation](https://pages.gitenterprise.xilinx.com/AIDA/mini-isp) for further information.
+See [the documentation](https://pages.github.com/amd/mini-isp) for further information.
 
 ## Acknowledgements
 
@@ -133,7 +133,7 @@ Mini-ISP is meant to be modified by the end-user - and chances are high that you
 
 See [the contributing file](CONTRIBUTING.md).
 
-If you find any bugs, please open a [Github Issue](https://gitenterprise.xilinx.com/AIDA/mini-isp/issues).
+If you find any bugs, please open a [Github Issue](https://github.com/amd/mini-isp/issues).
 
 ## License
 

@@ -65,7 +65,7 @@ toggle.name = "Switch to light mode"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
-link = "https://gitenterprise.xilinx.com/AIDA/mini-isp"
+link = "https://github.com/amd/mini-isp"
 
 [project.markdown_extensions.pymdownx.arithmatex]
 generic = true
