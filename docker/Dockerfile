@@ -25,7 +25,7 @@ RUN apt-get update; apt-get --no-install-recommends -y install \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Bazelisk
-RUN wget https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-amd64 -O /usr/local/bin/bazel && chmod a+rx /usr/local/bin/bazel && /usr/local/bin/bazel --version
+RUN wget -q https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-amd64 -O /usr/local/bin/bazel && chmod a+rx /usr/local/bin/bazel && /usr/local/bin/bazel --version
 
 # Build Verible from source
 RUN git clone --recurse-submodules --branch "$VERIBLE_VERSION" --depth 1 https://github.com/chipsalliance/verible.git \
@@ -98,6 +98,7 @@ RUN apt-get update; apt-get --no-install-recommends -y install \
         curl \
         g++ \
         git \
+        gosu \
         help2man \
         libfl2 \
         libfl-dev \
@@ -145,8 +146,8 @@ ENV LC_ALL en_US.UTF-8
 
 # Change user and create working directory
 USER vscode
-RUN sudo mkdir -p /workspaces \
-    && sudo chown vscode:vscode /workspaces
+RUN gosu mkdir -p /workspaces \
+    && gosu chown vscode:vscode /workspaces
 WORKDIR /workspaces
 
 # Install dependencies
