@@ -4,7 +4,7 @@ Contributions to Mini-ISP are very welcome!
 
 Please follow the steps below and be sure that your contribution complies with our guidelines.
 
-1. Share your proposal via [Github issues](https://gitenterprise.xilinx.com/AIDA/mini-isp/issues).
+1. Share your proposal via [Github issues](https://github.com/amd/mini-isp/issues).
 
 2. Submit your pull request:
 
