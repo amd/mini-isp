@@ -55,6 +55,7 @@ jobs:
       - name: Build base container image
         uses: docker/build-push-action@v7
         with:
+          platforms: linux/amd64
           push: true
           context: .
           file: ./docker/Dockerfile

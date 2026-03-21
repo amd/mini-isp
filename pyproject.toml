@@ -12,7 +12,7 @@ name = "mini-isp"
 description = "A minimal, open-source Image Signal Processor (ISP) for AMD FPGA, implemented in Verilog."
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.13"
+requires-python = "==3.13.*"
 version = "v0.0.1"
 dependencies = [
     "binpacking>=2.0.1",
