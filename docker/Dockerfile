@@ -98,7 +98,6 @@ RUN apt-get update; apt-get --no-install-recommends -y install \
         curl \
         g++ \
         git \
-        gosu \
         help2man \
         libfl2 \
         libfl-dev \
@@ -144,11 +143,13 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-# Change user and create working directory
-USER vscode
-RUN gosu mkdir -p /workspaces \
-    && gosu chown vscode:vscode /workspaces
+# create working directory
+RUN mkdir -p /workspaces \
+    && chown vscode:vscode /workspaces
 WORKDIR /workspaces
+
+# Change user
+USER vscode
 
 # Install dependencies
 COPY pyproject.toml uv.lock /workspaces/
