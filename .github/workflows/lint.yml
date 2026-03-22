@@ -23,4 +23,4 @@ jobs:
       with:
         fetch-depth: 0
     - name: Run lint
-      run: make lint
+      uses: j178/prek-action@v2
