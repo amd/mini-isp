@@ -1,0 +1,128 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2025 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+name: Linting and license check
+
+on: [push]
+
+jobs:
+  lint:
+    name: "Run pre-commit lint"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Run lint
+      run: |
+        git config --global --add safe.directory $GITHUB_WORKSPACE
+        make lint
+
+  simulation:
+    name: "Run test bench simulations"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Simulation
+      run: make sim
+    - name: Upload
+      uses: actions/upload-artifact@v7
+      with:
+        name: Simulation artifacts
+        path: |
+          build/sim/**/*.png
+          build/sim/**/*.pdf
+          build/sim/**/*.xml
+        retention-days: 1
+
+  synthesis:
+    name: "Run synthesis and generate reports"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Synthesis
+      run: make synth
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: synthesis_reports
+        path: build/docs/reports
+        retention-days: 1
+
+  test:
+    name: "Run Python tests"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Test
+      run: make test
+
+  docs:
+    name: "Generate documentation"
+    needs: synthesis
+    permissions:
+      contents: read
+      packages: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v8
+        with:
+          name: synthesis_reports
+          path: build/docs/reports
+      - run: make docs
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/site
+      - uses: actions/deploy-pages@v4
+        id: deployment
