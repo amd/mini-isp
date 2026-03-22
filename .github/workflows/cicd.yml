@@ -98,7 +98,7 @@ jobs:
     needs: synthesis
     permissions:
       contents: read
-      packages: read
+      packages: write
       pages: write
       id-token: write
     environment:
@@ -111,6 +111,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
+    if: ${{ github.ref == 'ref/head/main' }}
     steps:
       - uses: actions/configure-pages@v5
       - uses: actions/checkout@v6
