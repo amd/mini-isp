@@ -4,7 +4,7 @@
 ![banner](docs/img/mini-isp.png)
 -->
 
-[![Synthesis](https://github.com/amd/mini-isp/actions/workflows/synthesis.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/synthesis.yml) [![Test](https://github.com/amd/mini-isp/actions/workflows/test.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/test.yml) [![Simulation](https://github.com/amd/mini-isp/actions/workflows/simulation.yml/badge.svg?event=push)](https://github.com/amd/mini-isp/actions/workflows/simulation.yml)
+[![Lint, simulate, synthesize, test and docs](https://github.com/amd/mini-isp/actions/workflows/cicd.yml/badge.svg)](https://github.com/amd/mini-isp/actions/workflows/cicd.yml)
 
 A minimal, open-source Image Signal Processor (ISP) for AMD FPGA, implemented in Verilog.
 
