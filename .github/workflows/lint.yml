@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/amd/mini-isp-dev:latest
+      options: --user root
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.github_token }}
@@ -22,4 +23,6 @@ jobs:
       with:
         fetch-depth: 0
     - name: Run lint
-      run: make lint
+      run: |
+        git config --global --add safe.directory $GITHUB_WORKSPACE
+        make lint
