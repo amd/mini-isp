@@ -117,7 +117,7 @@ The top-level Makefile contains the following targets:
 * ```make lint``` To lint all files.
 * ```make clean``` To clean the build directory.
 
-See [the documentation](https://pages.github.com/amd/mini-isp) for further information.
+See [the documentation](https://amd.github.io/mini-isp) for further information.
 
 ## Acknowledgements
 
