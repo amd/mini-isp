@@ -3,7 +3,7 @@
 
 # SPDX-License-Identifier: MIT
 
-name: Linting and license check
+name: "Lint, simulate, synthesize, test and docs"
 
 on: [push]
 
@@ -70,7 +70,7 @@ jobs:
     - name: Synthesis
       run: make synth
     - name: Upload
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: synthesis_reports
         path: build/docs/reports
