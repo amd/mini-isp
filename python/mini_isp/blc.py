@@ -23,12 +23,14 @@ class BlackLevelCorrection:
         """
         Reference implementation for black level correction
         """
-        result = cfa.astype(np.float64) - self.black_level
+        result = cfa.copy().astype(np.double)
+        mask = result < np.max(result)
+        np.putmask(result, mask, result - self.black_level)
 
         # clip to 0
         result[result < 0] = 0
 
-        return result.astype(cfa.dtype)
+        return result
 
     def hardware(self, cfa: np.ndarray) -> np.ndarray:
         """

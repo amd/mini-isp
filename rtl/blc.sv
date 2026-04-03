@@ -49,6 +49,10 @@ module blc
   reg  [INT_DATA_WIDTH-1:0]   pipe_0_pixel_1;
   reg  [INT_DATA_WIDTH-1:0]   pipe_0_pixel_2;
   reg  [INT_DATA_WIDTH-1:0]   pipe_0_pixel_3;
+  reg                         pipe_0_pixel_0_sat;
+  reg                         pipe_0_pixel_1_sat;
+  reg                         pipe_0_pixel_2_sat;
+  reg                         pipe_0_pixel_3_sat;
   reg                         pipe_0_tvalid = 'b0;
   wire                        pipe_0_tready;
   reg                         pipe_0_tlast;
@@ -109,6 +113,13 @@ module blc
       pipe_0_pixel_1 <= pipe_0_pixel_1_wire;
       pipe_0_pixel_2 <= pipe_0_pixel_2_wire;
       pipe_0_pixel_3 <= pipe_0_pixel_3_wire;
+
+      // saturation check / AND-reduction logic
+      pipe_0_pixel_0_sat <= &(pipe_0_pixel_0_wire[PIXEL_BIT_WIDTH-1:0]);
+      pipe_0_pixel_1_sat <= &(pipe_0_pixel_1_wire[PIXEL_BIT_WIDTH-1:0]);
+      pipe_0_pixel_2_sat <= &(pipe_0_pixel_2_wire[PIXEL_BIT_WIDTH-1:0]);
+      pipe_0_pixel_3_sat <= &(pipe_0_pixel_3_wire[PIXEL_BIT_WIDTH-1:0]);
+
       pipe_0_tvalid  <= s_axis_tvalid;
       pipe_0_tlast   <= s_axis_tlast;
       pipe_0_tuser   <= s_axis_tuser;
@@ -124,10 +135,31 @@ module blc
 
   always_ff @ (posedge clk) begin
     if (pipe_1_tready == 1'b1) begin
-      pipe_1_pixel_0 <= subtract_and_saturate(pipe_0_pixel_0 - int_black_level);
-      pipe_1_pixel_1 <= subtract_and_saturate(pipe_0_pixel_1 - int_black_level);
-      pipe_1_pixel_2 <= subtract_and_saturate(pipe_0_pixel_2 - int_black_level);
-      pipe_1_pixel_3 <= subtract_and_saturate(pipe_0_pixel_3 - int_black_level);
+      // only subtract if pixel is not saturated
+      if (pipe_0_pixel_0_sat == 1'b1) begin
+        pipe_1_pixel_0 <= pipe_0_pixel_0[PIXEL_BIT_WIDTH-1:0];
+      end else begin
+        pipe_1_pixel_0 <= subtract_and_saturate(pipe_0_pixel_0 - int_black_level);
+      end
+
+      if (pipe_0_pixel_1_sat == 1'b1) begin
+        pipe_1_pixel_1 <= pipe_0_pixel_1[PIXEL_BIT_WIDTH-1:0];
+      end else begin
+        pipe_1_pixel_1 <= subtract_and_saturate(pipe_0_pixel_1 - int_black_level);
+      end
+
+      if (pipe_0_pixel_2_sat == 1'b1) begin
+        pipe_1_pixel_2 <= pipe_0_pixel_2[PIXEL_BIT_WIDTH-1:0];
+      end else begin
+        pipe_1_pixel_2 <= subtract_and_saturate(pipe_0_pixel_2 - int_black_level);
+      end
+
+      if (pipe_0_pixel_3_sat == 1'b1) begin
+        pipe_1_pixel_3 <= pipe_0_pixel_3[PIXEL_BIT_WIDTH-1:0];
+      end else begin
+        pipe_1_pixel_3 <= subtract_and_saturate(pipe_0_pixel_3 - int_black_level);
+      end
+
       pipe_1_tvalid  <= pipe_0_tvalid;
       pipe_1_tlast   <= pipe_0_tlast;
       pipe_1_tuser   <= pipe_0_tuser;

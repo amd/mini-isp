@@ -85,15 +85,20 @@ async def test_blc_basic(dut):
     await tb.reset()
 
     # load image
-    cfa = np.random.rand(16, 16)
+    max_px = 2 ** int(dut.PIXEL_BIT_WIDTH.value) - 1
+    overshoot = 200
+    cfa = np.random.randint(
+        low=0,
+        high=max_px + overshoot,
+        size=(64, 64),
+        dtype=np.uint32,
+    )
 
     h = cfa.shape[0]
     w = cfa.shape[1]
 
-    # scale to full range
-    old_max_px = np.max(cfa)
-    new_max_px = 2 ** int(dut.PIXEL_BIT_WIDTH.value) - 1
-    cfa = ((cfa / old_max_px) * new_max_px).astype(np.uint32)
+    # clip to max range
+    cfa = cfa.clip(0, max_px)
 
     # loop over the image
     tuser = [1] * tb.axis_source.byte_lanes + [0]
@@ -117,14 +122,14 @@ async def test_blc_basic(dut):
             frame.tdata, int(dut.PIXEL_PER_CYCLE.value), int(dut.PIXEL_BIT_WIDTH.value)
         )
 
-    blc = BlackLevelCorrection(50)
+    blc = BlackLevelCorrection(dut.black_level.value.to_unsigned())
     ref = blc.reference(cfa)
 
     cv2.imwrite("blc_orig.png", ((cfa * 256) / np.max(cfa)).astype(np.uint8))
     cv2.imwrite("blc_ref.png", ((ref * 256) / np.max(ref)).astype(np.uint8))
     cv2.imwrite("blc.png", ((result * 256) / np.max(result)).astype(np.uint8))
 
-    assert np.allclose(result.astype(np.uint32), ref.astype(np.uint32), atol=0)
+    np.testing.assert_allclose(result.astype(np.uint32), ref.astype(np.uint32), atol=0)
 
     await Timer(20 * 10, unit="ns")
 
