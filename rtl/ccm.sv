@@ -44,17 +44,17 @@ module ccm
   localparam ADD_BIT_WIDTH = MULT_BIT_WIDTH + 3;
   localparam RIGHT_SHIFT_BITS = 12; // 4.12 fixed point format of coefficients
 
-  function [COMPONENT_BIT_WIDTH-1:0] shift_and_saturate( input [ADD_BIT_WIDTH-1:0] data );
+  function [COMPONENT_BIT_WIDTH:0] shift_and_saturate( input [ADD_BIT_WIDTH-1:0] data );
     begin
       if (data[ADD_BIT_WIDTH-1] == 1'b1) begin
         // negative number, set to zero
-        shift_and_saturate = '0;
+        shift_and_saturate = {1'b0, {(COMPONENT_BIT_WIDTH){1'b0}}};
       end else if (data[ADD_BIT_WIDTH-2:COMPONENT_BIT_WIDTH+RIGHT_SHIFT_BITS] != '0) begin
         // overflow, set to maximum allowed value
-        shift_and_saturate = '1;
+        shift_and_saturate = {1'b1, {(COMPONENT_BIT_WIDTH){'1}}};
       end else begin
         // all good, shift and output
-        shift_and_saturate = data[COMPONENT_BIT_WIDTH+RIGHT_SHIFT_BITS-1:RIGHT_SHIFT_BITS];
+        shift_and_saturate = {1'b0, data[COMPONENT_BIT_WIDTH+RIGHT_SHIFT_BITS-1:RIGHT_SHIFT_BITS]};
       end
     end
   endfunction
@@ -94,12 +94,32 @@ module ccm
   wire signed [COMPONENT_BIT_WIDTH:0]     pipe_0_pixel3_r_wire;
   wire signed [COMPONENT_BIT_WIDTH:0]     pipe_0_pixel3_g_wire;
   wire signed [COMPONENT_BIT_WIDTH:0]     pipe_0_pixel3_b_wire;
+  reg                                     pipe_0_pixel0_r_saturated;
+  reg                                     pipe_0_pixel0_g_saturated;
+  reg                                     pipe_0_pixel0_b_saturated;
+  reg                                     pipe_0_pixel1_r_saturated;
+  reg                                     pipe_0_pixel1_g_saturated;
+  reg                                     pipe_0_pixel1_b_saturated;
+  reg                                     pipe_0_pixel2_r_saturated;
+  reg                                     pipe_0_pixel2_g_saturated;
+  reg                                     pipe_0_pixel2_b_saturated;
+  reg                                     pipe_0_pixel3_r_saturated;
+  reg                                     pipe_0_pixel3_g_saturated;
+  reg                                     pipe_0_pixel3_b_saturated;
   reg                                     pipe_0_tlast;
   reg  [TUSER_WIDTH-1:0]                  pipe_0_tuser;
   reg                                     pipe_0_tvalid = 'b0;
   wire                                    pipe_0_tready;
 
   // Pipe 1 signals
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_1_pixel0_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_1_pixel1_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_1_pixel2_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_1_pixel3_gray;
+  reg                                     pipe_1_pixel0_saturated;
+  reg                                     pipe_1_pixel1_saturated;
+  reg                                     pipe_1_pixel2_saturated;
+  reg                                     pipe_1_pixel3_saturated;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_1_pixel0_r_r;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_1_pixel0_r_g;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_1_pixel0_r_b;
@@ -178,6 +198,14 @@ module ccm
   wire                                    pipe_1_tready;
 
   // pipe 2 signals
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_2_pixel0_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_2_pixel1_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_2_pixel2_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_2_pixel3_gray;
+  reg                                     pipe_2_pixel0_saturated;
+  reg                                     pipe_2_pixel1_saturated;
+  reg                                     pipe_2_pixel2_saturated;
+  reg                                     pipe_2_pixel3_saturated;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_2_pixel0_r;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_2_pixel0_g;
   reg signed  [ADD_BIT_WIDTH-1:0]         pipe_2_pixel0_b;
@@ -208,18 +236,26 @@ module ccm
   wire                                    pipe_2_tready;
 
   // pipe 3 signals
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel0_r;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel0_g;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel0_b;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel1_r;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel1_g;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel1_b;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel2_r;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel2_g;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel2_b;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel3_r;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel3_g;
-  reg [COMPONENT_BIT_WIDTH-1:0]           pipe_3_pixel3_b;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_3_pixel0_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_3_pixel1_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_3_pixel2_gray;
+  reg signed  [COMPONENT_BIT_WIDTH-1:0]   pipe_3_pixel3_gray;
+  reg                                     pipe_3_pixel0_saturated;
+  reg                                     pipe_3_pixel1_saturated;
+  reg                                     pipe_3_pixel2_saturated;
+  reg                                     pipe_3_pixel3_saturated;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel0_r;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel0_g;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel0_b;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel1_r;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel1_g;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel1_b;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel2_r;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel2_g;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel2_b;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel3_r;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel3_g;
+  reg [COMPONENT_BIT_WIDTH:0]             pipe_3_pixel3_b;
   reg                                     pipe_3_tlast;
   reg [TUSER_WIDTH-1:0]                   pipe_3_tuser;
   reg                                     pipe_3_tvalid = 'b0;
@@ -289,6 +325,19 @@ module ccm
         pipe_0_pixel3_r <= pipe_0_pixel3_r_wire;
         pipe_0_pixel3_g <= pipe_0_pixel3_g_wire;
         pipe_0_pixel3_b <= pipe_0_pixel3_b_wire;
+
+        pipe_0_pixel0_r_saturated <= (pipe_0_pixel0_r_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel0_g_saturated <= (pipe_0_pixel0_g_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel0_b_saturated <= (pipe_0_pixel0_b_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel1_r_saturated <= (pipe_0_pixel1_r_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel1_g_saturated <= (pipe_0_pixel1_g_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel1_b_saturated <= (pipe_0_pixel1_b_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel2_r_saturated <= (pipe_0_pixel2_r_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel2_g_saturated <= (pipe_0_pixel2_g_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel2_b_saturated <= (pipe_0_pixel2_b_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel3_r_saturated <= (pipe_0_pixel3_r_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel3_g_saturated <= (pipe_0_pixel3_g_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
+        pipe_0_pixel3_b_saturated <= (pipe_0_pixel3_b_wire[COMPONENT_BIT_WIDTH-1:0] == '1);
 
         // capture new matrix coefficients only on start of frame
         if (s_axis_tuser[0] == 1'b1) begin
@@ -380,6 +429,16 @@ module ccm
   always_ff @ (posedge clk) begin
     if (pipe_1_tready == 1'b1) begin
       if (pipe_0_tvalid == 1'b1) begin
+
+        pipe_1_pixel0_gray <= COMPONENT_BIT_WIDTH'(({2'b0, pipe_0_pixel0_r[COMPONENT_BIT_WIDTH-1:0]} + ({2'b0, pipe_0_pixel0_g[COMPONENT_BIT_WIDTH-1:0]} << 1) + {2'b0, pipe_0_pixel0_b[COMPONENT_BIT_WIDTH-1:0]}) >> 2);
+        pipe_1_pixel1_gray <= COMPONENT_BIT_WIDTH'(({2'b0, pipe_0_pixel1_r[COMPONENT_BIT_WIDTH-1:0]} + ({2'b0, pipe_0_pixel1_g[COMPONENT_BIT_WIDTH-1:0]} << 1) + {2'b0, pipe_0_pixel1_b[COMPONENT_BIT_WIDTH-1:0]}) >> 2);
+        pipe_1_pixel2_gray <= COMPONENT_BIT_WIDTH'(({2'b0, pipe_0_pixel2_r[COMPONENT_BIT_WIDTH-1:0]} + ({2'b0, pipe_0_pixel2_g[COMPONENT_BIT_WIDTH-1:0]} << 1) + {2'b0, pipe_0_pixel2_b[COMPONENT_BIT_WIDTH-1:0]}) >> 2);
+        pipe_1_pixel3_gray <= COMPONENT_BIT_WIDTH'(({2'b0, pipe_0_pixel3_r[COMPONENT_BIT_WIDTH-1:0]} + ({2'b0, pipe_0_pixel3_g[COMPONENT_BIT_WIDTH-1:0]} << 1) + {2'b0, pipe_0_pixel3_b[COMPONENT_BIT_WIDTH-1:0]}) >> 2);
+
+        pipe_1_pixel0_saturated <= pipe_0_pixel0_r_saturated | pipe_0_pixel0_g_saturated | pipe_0_pixel0_b_saturated;
+        pipe_1_pixel1_saturated <= pipe_0_pixel1_r_saturated | pipe_0_pixel1_g_saturated | pipe_0_pixel1_b_saturated;
+        pipe_1_pixel2_saturated <= pipe_0_pixel2_r_saturated | pipe_0_pixel2_g_saturated | pipe_0_pixel2_b_saturated;
+        pipe_1_pixel3_saturated <= pipe_0_pixel3_r_saturated | pipe_0_pixel3_g_saturated | pipe_0_pixel3_b_saturated;
 
         pipe_1_pixel0_r_r <= ADD_BIT_WIDTH'(pipe_1_pixel0_r_r_wire);
         pipe_1_pixel0_r_g <= ADD_BIT_WIDTH'(pipe_1_pixel0_r_g_wire);
@@ -480,6 +539,16 @@ module ccm
         pipe_2_pixel3_g <= pipe_2_pixel3_g_wire;
         pipe_2_pixel3_b <= pipe_2_pixel3_b_wire;
 
+        pipe_2_pixel0_gray <= pipe_1_pixel0_gray;
+        pipe_2_pixel1_gray <= pipe_1_pixel1_gray;
+        pipe_2_pixel2_gray <= pipe_1_pixel2_gray;
+        pipe_2_pixel3_gray <= pipe_1_pixel3_gray;
+
+        pipe_2_pixel0_saturated <= pipe_1_pixel0_saturated;
+        pipe_2_pixel1_saturated <= pipe_1_pixel1_saturated;
+        pipe_2_pixel2_saturated <= pipe_1_pixel2_saturated;
+        pipe_2_pixel3_saturated <= pipe_1_pixel3_saturated;
+
       end
 
       pipe_2_tvalid   <= pipe_1_tvalid;
@@ -511,6 +580,16 @@ module ccm
         pipe_3_pixel3_r <= shift_and_saturate(pipe_2_pixel3_r);
         pipe_3_pixel3_g <= shift_and_saturate(pipe_2_pixel3_g);
         pipe_3_pixel3_b <= shift_and_saturate(pipe_2_pixel3_b);
+
+        pipe_3_pixel0_gray <= pipe_2_pixel0_gray;
+        pipe_3_pixel1_gray <= pipe_2_pixel1_gray;
+        pipe_3_pixel2_gray <= pipe_2_pixel2_gray;
+        pipe_3_pixel3_gray <= pipe_2_pixel3_gray;
+
+        pipe_3_pixel0_saturated <= pipe_2_pixel0_saturated;
+        pipe_3_pixel1_saturated <= pipe_2_pixel1_saturated;
+        pipe_3_pixel2_saturated <= pipe_2_pixel2_saturated;
+        pipe_3_pixel3_saturated <= pipe_2_pixel3_saturated;
       end
 
       pipe_3_tvalid   <= pipe_2_tvalid;
@@ -534,17 +613,57 @@ module ccm
         pipe_4_pixel0_g <= pipe_3_pixel0_g[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel0_b <= pipe_3_pixel0_b[COMPONENT_BIT_WIDTH-1:0];
 
+        if (pipe_3_pixel0_saturated == 1'b1) begin
+          pipe_4_pixel0_r <= pipe_3_pixel0_gray;
+          pipe_4_pixel0_g <= pipe_3_pixel0_gray;
+          pipe_4_pixel0_b <= pipe_3_pixel0_gray;
+//        end else if (pipe_3_pixel0_r[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel0_g[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel0_b[COMPONENT_BIT_WIDTH] == 1'b1) begin
+//          pipe_4_pixel0_r <= pipe_3_pixel0_gray;
+//          pipe_4_pixel0_g <= pipe_3_pixel0_gray;
+//          pipe_4_pixel0_b <= pipe_3_pixel0_gray;
+        end
+
         pipe_4_pixel1_r <= pipe_3_pixel1_r[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel1_g <= pipe_3_pixel1_g[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel1_b <= pipe_3_pixel1_b[COMPONENT_BIT_WIDTH-1:0];
+
+        if (pipe_3_pixel1_saturated == 1'b1) begin
+          pipe_4_pixel1_r <= pipe_3_pixel1_gray;
+          pipe_4_pixel1_g <= pipe_3_pixel1_gray;
+          pipe_4_pixel1_b <= pipe_3_pixel1_gray;
+//        end else if (pipe_3_pixel1_r[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel1_g[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel1_b[COMPONENT_BIT_WIDTH] == 1'b1) begin
+//          pipe_4_pixel1_r <= pipe_3_pixel1_gray;
+//          pipe_4_pixel1_g <= pipe_3_pixel1_gray;
+//          pipe_4_pixel1_b <= pipe_3_pixel1_gray;
+        end
 
         pipe_4_pixel2_r <= pipe_3_pixel2_r[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel2_g <= pipe_3_pixel2_g[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel2_b <= pipe_3_pixel2_b[COMPONENT_BIT_WIDTH-1:0];
 
+        if (pipe_3_pixel2_saturated == 1'b1) begin
+          pipe_4_pixel2_r <= pipe_3_pixel2_gray;
+          pipe_4_pixel2_g <= pipe_3_pixel2_gray;
+          pipe_4_pixel2_b <= pipe_3_pixel2_gray;
+//        end else if (pipe_3_pixel2_r[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel2_g[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel2_b[COMPONENT_BIT_WIDTH] == 1'b1) begin
+//          pipe_4_pixel2_r <= pipe_3_pixel2_gray;
+//          pipe_4_pixel2_g <= pipe_3_pixel2_gray;
+//          pipe_4_pixel2_b <= pipe_3_pixel2_gray;
+        end
+
         pipe_4_pixel3_r <= pipe_3_pixel3_r[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel3_g <= pipe_3_pixel3_g[COMPONENT_BIT_WIDTH-1:0];
         pipe_4_pixel3_b <= pipe_3_pixel3_b[COMPONENT_BIT_WIDTH-1:0];
+
+        if (pipe_3_pixel3_saturated == 1'b1) begin
+          pipe_4_pixel3_r <= pipe_3_pixel3_gray;
+          pipe_4_pixel3_g <= pipe_3_pixel3_gray;
+          pipe_4_pixel3_b <= pipe_3_pixel3_gray;
+//        end else if (pipe_3_pixel3_r[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel3_g[COMPONENT_BIT_WIDTH] == 1'b1 || pipe_3_pixel3_b[COMPONENT_BIT_WIDTH] == 1'b1) begin
+//          pipe_4_pixel3_r <= pipe_3_pixel3_gray;
+//          pipe_4_pixel3_g <= pipe_3_pixel3_gray;
+//          pipe_4_pixel3_b <= pipe_3_pixel3_gray;
+        end
 
       end
 
