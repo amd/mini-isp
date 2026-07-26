@@ -489,6 +489,19 @@ module ccm
 
     if (rstn == 1'b0) begin
       pipe_2_tvalid   <= '0;
+      // Reset the accumulator registers. Should not be required, but Yosys optimizes away the DSPs without reset.
+      pipe_2_pixel0_r <= '0;
+      pipe_2_pixel0_g <= '0;
+      pipe_2_pixel0_b <= '0;
+      pipe_2_pixel1_r <= '0;
+      pipe_2_pixel1_g <= '0;
+      pipe_2_pixel1_b <= '0;
+      pipe_2_pixel2_r <= '0;
+      pipe_2_pixel2_g <= '0;
+      pipe_2_pixel2_b <= '0;
+      pipe_2_pixel3_r <= '0;
+      pipe_2_pixel3_g <= '0;
+      pipe_2_pixel3_b <= '0;
     end
   end
 
