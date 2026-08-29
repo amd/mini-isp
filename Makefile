@@ -8,16 +8,22 @@
 BUILD_DIR := build
 CACHE_DIR := .cache
 
+# Can be default, simfast, full, minimal
+SIM_SPEED ?= simfast
+
+# Can be default, simfast, full, minimal
+SYNTH_SPEED ?= simfast
+
 # Default target
 all: lint test synth sim
 
 # Run Verilator RTL test benches
 sim:
-	uv run pytest python/tb -m sim --speed simfast
+	uv run pytest python/tb -m sim --speed $(SIM_SPEED)
 
 # Run Yosys synthesis and generate utilization reports
 synth:
-	uv run pytest python/tb -m synth --speed simfast
+	uv run pytest python/tb -m synth --speed $(SYNTH_SPEED)
 
 # Run Python tests
 test:

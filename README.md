@@ -17,6 +17,7 @@ The Mini-ISP philosophy is summarized as follows:
 -	Acceptable image quality: Image quality must be acceptable for most applications and subjectively pleasant to the human eye.
 -	Open-source: All code and test cases are publicly available under a permissive license.
 
+For more information and resource usage statistics, please refer to [the documentation](https://amd.github.io/mini-isp).
 
 ## Table of Contents
 
