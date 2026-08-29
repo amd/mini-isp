@@ -46,3 +46,15 @@ path = [".github/ISSUE_TEMPLATE/*.md"]
 precedence = "override"
 SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".github/instructions/**"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [".agents/skills/**"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "MIT"

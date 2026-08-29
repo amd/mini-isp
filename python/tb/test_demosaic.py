@@ -112,7 +112,7 @@ async def test_demosaic_basic(dut):
         # tuser should only be set for first line (signals start of frame)
         tuser = 0
 
-    result = np.zeros((h - 4, 3 * (w - 4)), dtype=np.uint16)
+    result = np.zeros((h - 4, 3 * (w - 4)), dtype=np.uint32)
     for y in range(0, h - 4):
         frame = await tb.axis_sink.recv()
         result[y, :] = unpack_buffer(
@@ -153,7 +153,9 @@ async def test_demosaic_basic(dut):
     cv2.imwrite("demosaic.png", (rgb2 / np.max(rgb2)) * 256)
     cv2.imwrite("demosaic_ref.png", (ref_rgb / np.max(ref_rgb)) * 256)
 
-    assert np.allclose(rgb3.astype(np.uint32), ref_rgb.astype(np.uint32), atol=0)
+    np.testing.assert_allclose(
+        rgb3.astype(np.uint32), ref_rgb.astype(np.uint32), atol=0
+    )
 
     await Timer(20 * 10, unit="ns")
 

@@ -38,15 +38,12 @@ def test_bitsqrt():
     Test bitsqrt
     """
     export_lut(bitsqrt_lut, "bitsqrt.mem")
-    # rand = (np.random.rand(100, 100) * np.iinfo(np.uint32).max).astype(np.uint32)
     rand = np.linspace(1, np.iinfo(np.uint32).max - 1, 10000000).astype(np.uint32)
-    # rand = np.linspace(1, 1024, 1024).astype(np.uint32)
     rand[rand == 0] = 1  # exclude zero
-    # output = bitlog2(rand).astype(np.float32) / 2**24
     output = bitsqrt(rand).astype(np.float32) / 2**16
     reference = np.sqrt(rand)
     print("max error: ", np.max(np.abs(output - reference)))
-    assert np.allclose(output, reference, rtol=1e-2)
+    np.testing.assert_allclose(output, reference, rtol=1e-2)
     mask = np.abs(output - reference) > 60
     masked = output.copy()
     masked[mask] = 0

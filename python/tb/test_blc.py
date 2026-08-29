@@ -124,7 +124,7 @@ async def test_blc_basic(dut):
     cv2.imwrite("blc_ref.png", ((ref * 256) / np.max(ref)).astype(np.uint8))
     cv2.imwrite("blc.png", ((result * 256) / np.max(result)).astype(np.uint8))
 
-    assert np.allclose(result.astype(np.uint32), ref.astype(np.uint32), atol=0)
+    np.testing.assert_allclose(result.astype(np.uint32), ref.astype(np.uint32), atol=0)
 
     await Timer(20 * 10, unit="ns")
 
