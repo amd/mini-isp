@@ -7,6 +7,9 @@ name: "Lint, simulate, synthesize, test and docs"
 
 on: [push]
 
+env:
+  SPEED: ${{ github.ref == 'refs/heads/main' && 'full' || 'simfast' }}
+
 jobs:
   lint:
     name: "Run pre-commit lint"
@@ -42,7 +45,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Simulation
-      run: make sim
+      run: make sim SIM_SPEED=${{ env.SPEED }}
     - name: Upload
       uses: actions/upload-artifact@v7
       with:
@@ -68,7 +71,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Synthesis
-      run: make synth
+      run: make synth SYNTH_SPEED=${{ env.SPEED }}
     - name: Upload
       uses: actions/upload-artifact@v7
       with:
