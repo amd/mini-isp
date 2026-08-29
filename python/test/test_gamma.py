@@ -40,7 +40,7 @@ def test_gamma():
 
     diff_pwl = np.abs(output_pwl - reference)
     print("max absolute error pwl: ", np.max(diff_pwl))
-    assert np.allclose(output_pwl, reference, atol=1e-2)
+    np.testing.assert_allclose(output_pwl, reference, atol=1e-2)
 
     # plt.plot(reference)
     # plt.plot(output)

@@ -88,7 +88,7 @@ async def test_minmaxmean_basic(dut):
     for y in range(0, h):
         frame = AxiStreamFrame(
             pack_buffer(
-                cfa[y, :].astype(np.uint16),
+                cfa[y, :].astype(np.uint32),
                 int(dut.PIXEL_PER_CYCLE.value),
                 int(dut.PIXEL_BIT_WIDTH.value),
             ),

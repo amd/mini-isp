@@ -75,7 +75,7 @@ class TB(object):
 
 @cocotb.test()
 @pytest.mark.sim
-async def test_colorgain_basic(dut):
+async def test_linebuffer_basic(dut):
     """Try accessing the design."""
 
     tb = TB(dut)
@@ -104,7 +104,7 @@ async def test_colorgain_basic(dut):
     for y in range(0, h):
         frame = AxiStreamFrame(
             pack_buffer(
-                cfa[y, :].astype(np.uint16),
+                cfa[y, :].astype(np.uint32),
                 int(dut.PIXEL_PER_CYCLE.value),
                 int(dut.PIXEL_BIT_WIDTH.value),
             ),
@@ -114,7 +114,7 @@ async def test_colorgain_basic(dut):
         # tuser should only be set for first line (signals start of frame)
         tuser = 0
 
-    result = np.zeros((h - conv_loss, w * conv_size), dtype=np.uint16)
+    result = np.zeros((h - conv_loss, w * conv_size), dtype=np.uint32)
     for y in range(0, h - conv_loss):
         frame = await tb.axis_sink.recv()
         result[y, :] = unpack_buffer(
