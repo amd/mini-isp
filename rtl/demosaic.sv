@@ -34,12 +34,12 @@ module demosaic
     output wire  [TUSER_WIDTH-1:0]        m_axis_tuser
   );
 
-  function [PIXEL_BIT_WIDTH-1:0] shift_and_saturate( input [PIXEL_BIT_WIDTH+11:0] data );
+  function [PIXEL_BIT_WIDTH-1:0] shift_and_saturate( input [PIXEL_BIT_WIDTH+6:0] data );
     begin
-      if (data[PIXEL_BIT_WIDTH+11] == 1'b1) begin
+      if (data[PIXEL_BIT_WIDTH+6] == 1'b1) begin
         // negative number, set to zero
         shift_and_saturate = '0;
-      end else if (data[PIXEL_BIT_WIDTH+10:PIXEL_BIT_WIDTH+4] != '0) begin
+      end else if (data[PIXEL_BIT_WIDTH+5:PIXEL_BIT_WIDTH+4] != '0) begin
         // overflow, set to maximum allowed value
         shift_and_saturate = '1;
       end else begin
@@ -65,42 +65,42 @@ module demosaic
   reg [0:0] current_pixel = 1'b0;
   reg [0:0] current_line  = 1'b0;
 
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_center             [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_outer_horizontal   [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_outer_vertical     [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_inner_horizontal   [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_inner_vertical     [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_inner_top          [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+1:0] pipe_0_inner_bottom       [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_center             [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_outer_horizontal   [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_outer_vertical     [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_inner_horizontal   [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_inner_vertical     [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_inner_top          [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH:0]   pipe_0_inner_bottom       [0:PIXEL_PER_CYCLE-1]; // add
   reg                       pipe_0_tvalid = 'b0;
   wire                      pipe_0_tready;
   reg                       pipe_0_tlast;
   reg [TUSER_WIDTH-1:0]     pipe_0_tuser;
 
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_center             [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_center_x5          [0:PIXEL_PER_CYCLE-1]; // add + shift
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_center_x6          [0:PIXEL_PER_CYCLE-1]; // add + shift
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_outer_horizontal   [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_outer_vertical     [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_outer_cross        [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_inner_h_outer_v_x2 [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_inner_v_outer_h_x2 [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_inner_corner       [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+5:0] pipe_1_inner_cross        [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_center             [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_center_x5          [0:PIXEL_PER_CYCLE-1]; // add + shift
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_center_x6          [0:PIXEL_PER_CYCLE-1]; // add + shift
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_outer_horizontal   [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_outer_vertical     [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_outer_cross        [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_inner_h_outer_v_x2 [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_inner_v_outer_h_x2 [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_inner_corner       [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_1_inner_cross        [0:PIXEL_PER_CYCLE-1]; // add
   reg                       pipe_1_tvalid = 'b0;
   wire                      pipe_1_tready;
   reg                       pipe_1_tlast;
   reg [TUSER_WIDTH-1:0]     pipe_1_tuser;
 
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_center             [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_center_cross_x2    [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_outer_cross_x2     [0:PIXEL_PER_CYCLE-1]; // no compute
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_outer_cross_x3     [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_inner_c_outer_h_x2 [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_inner_c_outer_v_x2 [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_rb_at_g1_x2        [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_rb_at_g2_x2        [0:PIXEL_PER_CYCLE-1]; // add
-  reg [PIXEL_BIT_WIDTH+9:0] pipe_2_rb_at_rb_x2        [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_center             [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_center_cross_x2    [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_outer_cross_x2     [0:PIXEL_PER_CYCLE-1]; // no compute
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_outer_cross_x3     [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_inner_c_outer_h_x2 [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_inner_c_outer_v_x2 [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_rb_at_g1_x2        [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_rb_at_g2_x2        [0:PIXEL_PER_CYCLE-1]; // add
+  reg [PIXEL_BIT_WIDTH+4:0] pipe_2_rb_at_rb_x2        [0:PIXEL_PER_CYCLE-1]; // add
   reg                       pipe_2_tvalid = 'b0;
   wire                      pipe_2_tready;
   reg                       pipe_2_tlast;
@@ -238,7 +238,7 @@ module demosaic
   always_ff @ (posedge clk) begin
     if (pipe_0_tready == 1'b1) begin
       for (int px = 0; px < PIXEL_PER_CYCLE; px += 1) begin
-        pipe_0_center[px]           <= {2'b00, conv_window[2][px+2]};
+        pipe_0_center[px]           <= {1'b0,  conv_window[2][px+2]};
         pipe_0_outer_horizontal[px] <= {1'b0,  conv_window[2][px+0]} + {1'b0, conv_window[2][px+4]};
         pipe_0_outer_vertical[px]   <= {1'b0,  conv_window[0][px+2]} + {1'b0, conv_window[4][px+2]};
         pipe_0_inner_horizontal[px] <= {1'b0,  conv_window[2][px+1]} + {1'b0, conv_window[2][px+3]};
@@ -291,15 +291,15 @@ module demosaic
   always_ff @ (posedge clk) begin
     if (pipe_2_tready == 1'b1) begin
       for (int px = 0; px < PIXEL_PER_CYCLE; px += 1) begin
-        pipe_2_center[px]               <= {  4'b0000, pipe_1_center[px]};
-        pipe_2_center_cross_x2[px]      <= ( {4'b0000, pipe_1_center[px]} << 3)      + ({4'b0000, pipe_1_inner_cross[px]} << 2);
-        pipe_2_outer_cross_x2[px]       <= {  4'b0000, pipe_1_outer_cross[px]} << 1;
-        pipe_2_outer_cross_x3[px]       <= (({4'b0000, pipe_1_outer_cross[px]} << 1) +  {4'b0000, pipe_1_outer_cross[px]});
-        pipe_2_inner_c_outer_h_x2[px]   <= ( {4'b0000, pipe_1_inner_corner[px]}      +  {4'b0000, pipe_1_outer_horizontal[px]}) << 1;
-        pipe_2_inner_c_outer_v_x2[px]   <= ( {4'b0000, pipe_1_inner_corner[px]}      +  {4'b0000, pipe_1_outer_vertical[px]}) << 1;
-        pipe_2_rb_at_g1_x2[px]          <= ( {4'b0000, pipe_1_center_x5[px]} << 1)   +  {4'b0000, pipe_1_inner_h_outer_v_x2[px]};
-        pipe_2_rb_at_g2_x2[px]          <= ( {4'b0000, pipe_1_center_x5[px]} << 1)   +  {4'b0000, pipe_1_inner_v_outer_h_x2[px]};
-        pipe_2_rb_at_rb_x2[px]          <= ( {4'b0000, pipe_1_center_x6[px]}         + ({4'b0000, pipe_1_inner_corner[px]} << 1)) << 1;
+        pipe_2_center[px]               <= pipe_1_center[px];
+        pipe_2_center_cross_x2[px]      <= ( pipe_1_center[px] << 3)      + (pipe_1_inner_cross[px] << 2);
+        pipe_2_outer_cross_x2[px]       <= pipe_1_outer_cross[px] << 1;
+        pipe_2_outer_cross_x3[px]       <= ((pipe_1_outer_cross[px] << 1) +  pipe_1_outer_cross[px]);
+        pipe_2_inner_c_outer_h_x2[px]   <= ( pipe_1_inner_corner[px]      +  pipe_1_outer_horizontal[px]) << 1;
+        pipe_2_inner_c_outer_v_x2[px]   <= ( pipe_1_inner_corner[px]      +  pipe_1_outer_vertical[px]) << 1;
+        pipe_2_rb_at_g1_x2[px]          <= ( pipe_1_center_x5[px] << 1)   +  pipe_1_inner_h_outer_v_x2[px];
+        pipe_2_rb_at_g2_x2[px]          <= ( pipe_1_center_x5[px] << 1)   +  pipe_1_inner_v_outer_h_x2[px];
+        pipe_2_rb_at_rb_x2[px]          <= ( pipe_1_center_x6[px]         + (pipe_1_inner_corner[px] << 1)) << 1;
       end
 
       pipe_2_tvalid         <= pipe_1_tvalid;
