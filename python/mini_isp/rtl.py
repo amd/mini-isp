@@ -80,6 +80,9 @@ class Rtl:
         aggregated_stats["LUT"] = sum(
             [val for key, val in cell_stats.items() if re.search("^LUT.*", key)]
         )
+        aggregated_stats["LUTRAM"] = sum(
+            [val for key, val in cell_stats.items() if re.search("^RAM[0-9]+.*", key)]
+        )
 
         aggregated_stats["FF"] = sum(
             [val for key, val in cell_stats.items() if re.search("^FD.*", key)]
