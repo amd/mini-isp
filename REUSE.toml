@@ -58,3 +58,15 @@ path = [".agents/skills/**"]
 precedence = "override"
 SPDX-FileCopyrightText = ["Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2025 Timor Knudsen (AMD)"]
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["boards/**/*.patch"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2026 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "GPL-2.0"
+
+[[annotations]]
+path = ["boards/**/*.dtsi"]
+precedence = "override"
+SPDX-FileCopyrightText = ["Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2026 Timor Knudsen (AMD)"]
+SPDX-License-Identifier = "GPL-2.0"

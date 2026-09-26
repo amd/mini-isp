@@ -12,6 +12,10 @@ sim_build
 .DS_Store
 .vscode
 build/
+yocto/
+.Xil/
+*.jou
+*.log
 *.mem
 python/*.mem
 python/test/*.mem
