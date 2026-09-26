@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+[Unit]
+Description=VCS-3 dual-camera display demo
+After=systemd-udev-trigger.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/vcs3-demo
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

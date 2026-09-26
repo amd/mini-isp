@@ -1,0 +1,200 @@
+
+&amba {
+	/*zocl: zyxclmm_drm {
+		compatible = "xlnx,zocl";
+		status = "okay";
+		interrupt-parent = <&gic>;
+		interrupts = <0 89  4>, <0 90  4>, <0 91  4>, <0 92  4>,
+		<0 93  4>, <0 94  4>, <0 95  4>, <0 96  4>;
+	};*/
+
+	ov5647_clk: ov5647_clk {
+		#clock-cells = <0x0>;
+		clock-frequency = <25000000>;
+		compatible = "fixed-clock";
+	};
+	imx219_vana: fixedregulator@3 {
+		compatible = "regulator-fixed";
+		regulator-name = "imx219_vana";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+		enable-active-high;
+	};
+	imx219_vdig: fixedregulator@4 {
+		compatible = "regulator-fixed";
+		regulator-name = "imx219_vdig";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+	};
+	imx219_vddl: fixedregulator@5 {
+		compatible = "regulator-fixed";
+		regulator-name = "imx219_vddl";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+	};
+};
+
+/*-------------------- SD0 eMMC ----------------*/
+&sdhci0 {
+    // disable-wp;
+    no-1-8-v;
+};
+
+&dwc3_0 {
+    status = "okay";
+    dr_mode = "host";
+    maximum-speed = "super-speed";
+};
+
+&usb0 {
+    status = "okay";
+    /delete-property/ clocks;
+    /delete-property/ clock-names;
+    clocks = <0x3 0x20>;
+    clock-names = "bus_clk";
+};
+
+
+&qspi {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    status = "okay";
+    flash0: flash@0 {
+	spi-rx-bus-width = <4>;
+        spi-tx-bus-width = <4>;
+	parallel-memories = <0x00 0x4000000 0x00 0x4000000>;
+	compatible ="jedec,spi-nor", "n25q512a", "micron,m25p80";
+	reg = <0x0>;
+	#address-cells = <0x1>;
+        #size-cells = <0x1>;
+        spi-max-frequency = <50000000>;
+	partition@0 {
+		label = "boot";
+		reg = <0x00000000 0x01e00000>;
+	};
+	partition@1 {
+		label = "bootenv";
+		reg = <0x01e00000 0x00040000>;
+	};
+	partition@2 {
+		label = "kernel";
+		reg = <0x01e40000 0x02040000>;
+	};
+	partition@3 {
+		label = "bootscr";
+		reg = <0x03e80000 0x00180000>;
+	};
+	partition@4 {
+		label = "rootfs";
+		reg = <0x04000000 0x40000000>;
+	};
+    };
+};
+
+&i2c1 {
+	clock-frequency = <100000>;
+	status = "okay";
+
+	i2c-mux@70 {
+		compatible = "nxp,pca9546";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0x70>;
+		reset-gpios = <&gpio 34 1>;
+
+		i2c@1 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <1>;
+
+			ov5647_1: sensor1@36 {
+				compatible = "ovti,ov5647";
+				reg = <0x36>;
+				clocks = <&ov5647_clk>;
+
+				port@0 {
+					reg = <0>;
+					sensor_out1: endpoint {
+						clock-lanes = <0>;
+						data-lanes = <1>;
+						clock-noncontinuous;
+						link-frequencies = /bits/ 64 <456000000>;
+						remote-endpoint = <&mipi_csi_incsi_rx_path0_mipi_csi2_rx_subsyst_0>;
+					};
+				};
+			};
+		};
+
+		i2c@3 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <3>;
+
+			ov5647_2: sensor2@36 {
+				compatible = "ovti,ov5647";
+				reg = <0x36>;
+				clocks = <&ov5647_clk>;
+
+				port@0 {
+					reg = <0>;
+					sensor_out2: endpoint {
+						clock-lanes = <0>;
+						data-lanes = <1>;
+						clock-noncontinuous;
+						link-frequencies = /bits/ 64 <456000000>;
+						remote-endpoint = <&mipi_csi_incsi_rx_path1_mipi_csi2_rx_subsyst_1>;
+					};
+				};
+			};
+		};
+	};
+};
+
+&mipi_csi_incsi_rx_path0_mipi_csi2_rx_subsyst_0 {
+	remote-endpoint = <&sensor_out1>;
+};
+
+&mipi_csi_incsi_rx_path1_mipi_csi2_rx_subsyst_1 {
+	remote-endpoint = <&sensor_out2>;
+};
+
+&csi_rx_path0_mipi_csi2_rx_subsyst_0 {
+	xlnx,en-active-lanes;
+};
+
+&csi_rx_path1_mipi_csi2_rx_subsyst_1 {
+	xlnx,en-active-lanes;
+};
+
+&csi_rx_path1_v_proc_ss_1 {
+	compatible = "xlnx,v-vpss-scaler-2.2";
+	xlnx,max-height = <1200>;
+	xlnx,max-width = <1920>;
+};
+
+&csi_rx_path0_v_proc_ss_0 {
+	compatible = "xlnx,v-vpss-scaler-2.2";
+	xlnx,max-height = <1200>;
+	xlnx,max-width = <1920>;
+};
+
+&xx_mix_masterdsi_display_path_v_mix_0 {
+	xlnx,layer-max-height = <1200>;
+	xlnx,layer-max-width = <1920>;
+};
+
+&csi_rx_path0_v_frmbuf_wr_0 {
+	xlnx,max-height = <1200>;
+	xlnx,max-width = <1920>;
+};
+
+&csi_rx_path1_v_frmbuf_wr_0 {
+	xlnx,max-height = <1200>;
+	xlnx,max-width = <1920>;
+};
+
+&dsi_display_path_v_frmbuf_rd_0 {
+	xlnx,max-height = <1200>;
+	xlnx,max-width = <1920>;
+};
