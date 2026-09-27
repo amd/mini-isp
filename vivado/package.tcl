@@ -52,6 +52,15 @@ set SOURCES_LIST {
     ./rtl/skidbuffer.sv
 }
 
+if {$argc > 0} {
+    set OUTPUT_DIR [lindex $argv 0]
+    foreach file $SOURCES_LIST {
+        file mkdir [file join $OUTPUT_DIR [file dirname $file]]
+        file copy -force $file [file join $OUTPUT_DIR $file]
+    }
+    cd $OUTPUT_DIR
+}
+
 create_project -ip -in_memory
 
 ipx::create_core $VLNV_VENDOR $VLNV_LIBRARY $VLNV_NAME $VLNV_VERSION

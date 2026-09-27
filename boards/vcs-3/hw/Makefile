@@ -11,7 +11,8 @@ BOARD ?= vcs3_camera
 TOPOLOGY ?= baseline
 
 ISP_DIR := ../../..
-COMPONENT_XML := $(ISP_DIR)/component.xml
+IP_DIR := ip
+COMPONENT_XML := $(IP_DIR)/component.xml
 
 VIVADO_PROJ_NAME ?= proj_$(BOARD)_$(TOPOLOGY)
 PLATFORM_NAME := $(PLATFORM)_$(VERSION)
@@ -31,7 +32,7 @@ all: ip project bitstream xsa
 
 ip: $(COMPONENT_XML)
 $(COMPONENT_XML): $(SYNTH_SRCS)
-	cd $(ISP_DIR) && vivado -mode batch -notrace -source ./vivado/package.tcl
+	cd $(ISP_DIR) && vivado -mode batch -notrace -source ./vivado/package.tcl -tclargs $(CURDIR)/$(IP_DIR)
 
 project: ip $(PROJ_LOCKFILE)
 $(PROJ_LOCKFILE): tcl/build_hardware.tcl $(SYNTH_SRCS)
@@ -50,4 +51,4 @@ $(XSA): tcl/export_hardware.tcl $(PDI)
 
 clean:
 	rm -rf vivado* build .Xil *dynamic* *.log *.xpe
-	rm -rf $(COMPONENT_XML)
+	rm -rf $(IP_DIR)
