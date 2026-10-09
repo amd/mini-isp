@@ -1,41 +1,38 @@
 #!/bin/sh
 
 # SPDX-FileCopyrightText: Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 Sundance Multiprocessor Technology Ltd.
 # SPDX-FileCopyrightText: Copyright (c) 2026 Timor Knudsen (AMD)
 
 # SPDX-License-Identifier: MIT
 
-#Need to setup the media pipeline and start capture of video stream
-media-ctl -v -V '"ov5647 3-0036":0 [fmt:SBGGR10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0000000.mipi_csi2_rx_subsystem":0 [fmt:SBGGR10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0000000.mipi_csi2_rx_subsystem":1 [fmt:SRGGB10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path0":0 [fmt:SRGGB10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path0":1 [fmt:SBGGR8_1X8/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0010000.v_demosaic":0 [fmt:SBGGR8_1X8/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0010000.v_demosaic":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0030000.v_gamma_lut":0 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
-media-ctl -v -V '"a0030000.v_gamma_lut":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
+# Need to setup the media pipeline and start capture of video stream
+media-ctl -v -V '"ov5647 3-0036":0 [fmt:SBGGR10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"a0000000.mipi_csi2_rx_subsystem":0 [fmt:SBGGR10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"a0000000.mipi_csi2_rx_subsystem":1 [fmt:SRGGB10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path0":0 [fmt:SRGGB10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path0":1 [fmt:SBGGR12_1X12/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"a0002000.mini_isp":0 [fmt:SBGGR12_1X12/1924x1084 field:none colorspace:srgb]' -d /dev/media0
+media-ctl -v -V '"a0002000.mini_isp":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
 media-ctl -v -V '"a0040000.v_proc_ss":0 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
 media-ctl -v -V '"a0040000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1200 field:none colorspace:srgb]' -d /dev/media0
 
-media-ctl -v -V '"ov5647 5-0036":0 [fmt:SBGGR10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a0001000.mipi_csi2_rx_subsystem":0 [fmt:SBGGR10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a0001000.mipi_csi2_rx_subsystem":1 [fmt:SRGGB10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path1":0 [fmt:SRGGB10_1X10/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path1":1 [fmt:SBGGR8_1X8/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a0080000.v_demosaic":0 [fmt:SBGGR8_1X8/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a0080000.v_demosaic":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a00a0000.v_gamma_lut":0 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
-media-ctl -v -V '"a00a0000.v_gamma_lut":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"ov5647 5-0036":0 [fmt:SBGGR10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"a0001000.mipi_csi2_rx_subsystem":0 [fmt:SBGGR10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"a0001000.mipi_csi2_rx_subsystem":1 [fmt:SRGGB10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path1":0 [fmt:SRGGB10_1X10/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"amba_pl:axis_subsetcsi_rx_path1":1 [fmt:SBGGR12_1X12/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"a0003000.mini_isp":0 [fmt:SBGGR12_1X12/1924x1084 field:none colorspace:srgb]' -d /dev/media1
+media-ctl -v -V '"a0003000.mini_isp":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
 media-ctl -v -V '"a00c0000.v_proc_ss":0 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
 media-ctl -v -V '"a00c0000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1200 field:none colorspace:srgb]' -d /dev/media1
 
 # set cameras
-v4l2-ctl -d /dev/v4l-subdev0 -c white_balance_automatic=1
+v4l2-ctl -d /dev/v4l-subdev0 -c white_balance_automatic=0
 v4l2-ctl -d /dev/v4l-subdev0 -c auto_exposure=1
 v4l2-ctl -d /dev/v4l-subdev0 -c gain_automatic=1
 
-v4l2-ctl -d /dev/v4l-subdev5 -c white_balance_automatic=1
+v4l2-ctl -d /dev/v4l-subdev5 -c white_balance_automatic=0
 v4l2-ctl -d /dev/v4l-subdev5 -c auto_exposure=1
 v4l2-ctl -d /dev/v4l-subdev5 -c gain_automatic=1
 
@@ -57,10 +54,11 @@ PLANES=$(modetest -M "$DRM_DRIVER" 2>/dev/null | awk '
         p && $2=="type:" {intype=1; next}
         p && intype && $1=="value:" {print id, $2, bg; intype=0}')
 PRIMARY_PLANE=$(echo "$PLANES" | awk '$2==1{print $1; exit}')
-OVERLAY_PLANE=$(echo "$PLANES" | awk '$2==0 && $3==1{print $1; exit}')
+MAIN_PLANE=$(echo "$PLANES" | awk '$2==0 && $3==1{print $1; exit}')
+PIP_PLANE=$(echo "$PLANES" | awk '$2==0 && $3==1 && ++n==2{print $1; exit}')
 
 if [ -z "$CONNECTOR" ] || [ -z "$MODE" ] || [ -z "$CRTC" ] || \
-   [ -z "$PRIMARY_PLANE" ] || [ -z "$OVERLAY_PLANE" ]; then
+   [ -z "$PRIMARY_PLANE" ] || [ -z "$MAIN_PLANE" ] || [ -z "$PIP_PLANE" ]; then
         echo "ERROR: could not discover DRM display topology for driver '$DRM_DRIVER'."
         echo "Check that the '$DRM_DRIVER' DRM card exists and the DSI panel is connected."
         echo "Inspect manually with: modetest -M $DRM_DRIVER"
@@ -68,29 +66,34 @@ if [ -z "$CONNECTOR" ] || [ -z "$MODE" ] || [ -z "$CRTC" ] || \
         exit 1
 fi
 
-echo "DRM: driver=$DRM_DRIVER connector=$CONNECTOR crtc=$CRTC mode=$MODE primary_plane=$PRIMARY_PLANE overlay_plane=$OVERLAY_PLANE"
+echo "DRM: driver=$DRM_DRIVER connector=$CONNECTOR crtc=$CRTC mode=$MODE primary_plane=$PRIMARY_PLANE main_plane=$MAIN_PLANE pip_plane=$PIP_PLANE"
+
+echo 0 > /sys/module/xlnx_mixer/parameters/mixer_primary_enable
 
 modetest -M "$DRM_DRIVER" -s "${CONNECTOR}@${CRTC}:${MODE}@BG24" -w "${CONNECTOR}:video_mode:1" &
 sleep 1
+
+vcs3-cam 0 4
+vcs3-cam 1 4
 
 # HACK: set background color to black for all layers
 for reg in 0xa0120028 0xa0120030 0xa0120038; do devmem2 "$reg" w 0 > /dev/null; done
 
 while true; do
-        media-ctl -v -V '"a00c0000.v_proc_ss":1 [fmt:RBG888_1X24/960x600 field:none colorspace:srgb]' -d /dev/media1
-        media-ctl -v -V '"a0040000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1200 field:none colorspace:srgb]' -d /dev/media0
+        media-ctl -v -V '"a00c0000.v_proc_ss":1 [fmt:RBG888_1X24/960x540 field:none colorspace:srgb]' -d /dev/media1
+        media-ctl -v -V '"a0040000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media0
         gst-launch-1.0 -v \
-                v4l2src device=/dev/video1 ! video/x-raw,width=960,height=600,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,0,960,600>' plane-id="$OVERLAY_PLANE" \
-                v4l2src device=/dev/video0 ! video/x-raw,width=1920,height=1200,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" plane-id="$PRIMARY_PLANE" &
+                v4l2src device=/dev/video0 ! video/x-raw,width=1920,height=1080,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,60,1920,1080>' plane-id="$MAIN_PLANE" \
+                v4l2src device=/dev/video1 ! video/x-raw,width=960,height=540,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,0,960,540>' plane-id="$PIP_PLANE" &
         GST_PID=$!
         sleep 30
         kill "$GST_PID"; wait "$GST_PID"
 
-        media-ctl -v -V '"a00c0000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1200 field:none colorspace:srgb]' -d /dev/media1
-        media-ctl -v -V '"a0040000.v_proc_ss":1 [fmt:RBG888_1X24/960x600 field:none colorspace:srgb]' -d /dev/media0
+        media-ctl -v -V '"a00c0000.v_proc_ss":1 [fmt:RBG888_1X24/1920x1080 field:none colorspace:srgb]' -d /dev/media1
+        media-ctl -v -V '"a0040000.v_proc_ss":1 [fmt:RBG888_1X24/960x540 field:none colorspace:srgb]' -d /dev/media0
         gst-launch-1.0 -v \
-                v4l2src device=/dev/video0 ! video/x-raw,width=960,height=600,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,0,960,600>' plane-id="$OVERLAY_PLANE" \
-                v4l2src device=/dev/video1 ! video/x-raw,width=1920,height=1200,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" plane-id="$PRIMARY_PLANE" &
+                v4l2src device=/dev/video1 ! video/x-raw,width=1920,height=1080,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,60,1920,1080>' plane-id="$MAIN_PLANE" \
+                v4l2src device=/dev/video0 ! video/x-raw,width=960,height=540,framerate=30/1,format=RGB ! kmssink driver-name="$DRM_DRIVER" render-rectangle='<0,0,960,540>' plane-id="$PIP_PLANE" &
         GST_PID=$!
         sleep 30
         kill "$GST_PID"; wait "$GST_PID"

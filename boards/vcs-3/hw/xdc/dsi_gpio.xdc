@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 Sundance Multiprocessor Technology Ltd.
 # SPDX-FileCopyrightText: Copyright (c) 2026 Timor Knudsen (AMD)
 
 # SPDX-License-Identifier: MIT

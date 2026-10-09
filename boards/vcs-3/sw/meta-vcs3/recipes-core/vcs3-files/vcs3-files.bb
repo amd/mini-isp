@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ad
 
 SRC_URI = " \
     file://vcs3-demo \
+    file://vcs3-cam \
     file://vcs3-demo.service \
 "
 
@@ -23,11 +24,13 @@ SYSTEMD_AUTO_ENABLE = "enable"
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/vcs3-demo ${D}${bindir}/vcs3-demo
+    install -m 0755 ${S}/vcs3-cam ${D}${bindir}/vcs3-cam
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${S}/vcs3-demo.service ${D}${systemd_system_unitdir}/vcs3-demo.service
 }
 
 FILES:${PN} = " \
     ${bindir}/vcs3-demo \
+    ${bindir}/vcs3-cam \
     ${systemd_system_unitdir}/vcs3-demo.service \
 "

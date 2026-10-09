@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Sundance Multiprocessor Technology Ltd.
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Timor Knudsen (AMD)
+ *
+ * SPDX-License-Identifier: GPL-2.0-only
+ */
 
 &amba {
 	/*zocl: zyxclmm_drm {
@@ -165,6 +172,68 @@
 
 &csi_rx_path1_mipi_csi2_rx_subsyst_1 {
 	xlnx,en-active-lanes;
+};
+
+&csi_rx_path0_mini_isp_0 {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			mini_isp0_in: endpoint {
+				remote-endpoint = <&csi_rx_path0_axis_subset_converter_0csi_rx_path0_mini_isp_0>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			mini_isp0_out: endpoint {
+				remote-endpoint = <&vpss0_in>;
+			};
+		};
+	};
+};
+
+&csi_rx_path0_axis_subset_converter_0csi_rx_path0_mini_isp_0 {
+	remote-endpoint = <&mini_isp0_in>;
+};
+
+&scaler_port0csi_rx_path0_v_proc_ss_0 {
+	vpss0_in: endpoint {
+		remote-endpoint = <&mini_isp0_out>;
+	};
+};
+
+&csi_rx_path1_mini_isp_0 {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			mini_isp1_in: endpoint {
+				remote-endpoint = <&csi_rx_path1_axis_subset_converter_1csi_rx_path1_mini_isp_0>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			mini_isp1_out: endpoint {
+				remote-endpoint = <&vpss1_in>;
+			};
+		};
+	};
+};
+
+&csi_rx_path1_axis_subset_converter_1csi_rx_path1_mini_isp_0 {
+	remote-endpoint = <&mini_isp1_in>;
+};
+
+&scaler_port0csi_rx_path1_v_proc_ss_1 {
+	vpss1_in: endpoint {
+		remote-endpoint = <&mini_isp1_out>;
+	};
 };
 
 &csi_rx_path1_v_proc_ss_1 {
