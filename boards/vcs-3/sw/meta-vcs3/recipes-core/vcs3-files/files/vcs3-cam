@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# SPDX-FileCopyrightText: Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2026 Timor Knudsen (AMD)
+
+# SPDX-License-Identifier: MIT
+
+usage() {
+    echo "HACK HACK HACK usage: $0 <camera 0|1> <ct index 1-6>" >&2
+    echo "  1=2873K 2=2965K 3=3606K 4=4700K 5=5890K 6=7600K" >&2
+    exit 1
+}
+
+[ $# -eq 2 ] || usage
+
+case "$1" in
+    0) BASE=0xA0002000 ;;
+    1) BASE=0xA0003000 ;;
+    *) usage ;;
+esac
+
+# args: rgain|bgain g1gain|g0gain ccm_rg|rr ccm_gr|rb ccm_gb|gg ccm_bg|br blacklevel|ccm_bb
+write_regs() {
+    devmem2 $((BASE+0x00)) w "$1"
+    devmem2 $((BASE+0x04)) w "$2"
+    devmem2 $((BASE+0x08)) w "$3"
+    devmem2 $((BASE+0x0C)) w "$4"
+    devmem2 $((BASE+0x10)) w "$5"
+    devmem2 $((BASE+0x14)) w "$6"
+    devmem2 $((BASE+0x18)) w "$7"
+}
+
+case "$2" in
+    # 2873K  (rgain 0.9557, bgain 1.9448)
+    1) write_regs 0x007A00F9 0x00800080 0xFBCD1E1C 0xF5C9F617 0xF85E21D8 0xF00BFDD6 0x00402220 ;;
+    # 2965K  (rgain 0.9772, bgain 1.8925)
+    2) write_regs 0x007D00F2 0x00800080 0xF7B42268 0xF76EF5E4 0xF9C21ED0 0xE83A004B 0x0040277B ;;
+    # 3606K  (rgain 1.1177, bgain 1.5838)
+    3) write_regs 0x008F00CB 0x00800080 0xF8FC1F9B 0xF704F769 0xF9061FF6 0xF3ACFE03 0x00401E52 ;;
+    # 4700K  (rgain 1.3046, bgain 1.2663)
+    4) write_regs 0x00A700A2 0x00800080 0xF7C42028 0xF7AAF814 0xF82D2029 0xF53BFE7A 0x00401C4C ;;
+    # 5890K  (rgain 1.4174, bgain 1.1194)
+    5) write_regs 0x00B5008F 0x00800080 0xF58E222E 0xF843F844 0xF8D71EE6 0xF73AFDD8 0x00401AED ;;
+    # 7600K  (rgain 1.5427, bgain 0.9882)
+    6) write_regs 0x00C5007E 0x00800080 0xF9BC210E 0xF7DCF536 0xF3BF2465 0xF56CFDC4 0x00401CD0 ;;
+    *) usage ;;
+esac

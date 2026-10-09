@@ -63,10 +63,4 @@ SPDX-License-Identifier = "MIT"
 path = ["boards/**/*.patch"]
 precedence = "override"
 SPDX-FileCopyrightText = ["Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2026 Timor Knudsen (AMD)"]
-SPDX-License-Identifier = "GPL-2.0"
-
-[[annotations]]
-path = ["boards/**/*.dtsi"]
-precedence = "override"
-SPDX-FileCopyrightText = ["Copyright (c) 2026 Advanced Micro Devices, Inc. All rights reserved.", "Copyright (c) 2026 Timor Knudsen (AMD)"]
-SPDX-License-Identifier = "GPL-2.0"
+SPDX-License-Identifier = "GPL-2.0-only"

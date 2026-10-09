@@ -14,7 +14,7 @@ index e193fef4fced..0e877e5274da 100644
 @@ -320,6 +320,95 @@ static struct regval_list ov5647_1080p30_10bpp[] = {
  	{0x0100, 0x01},
  };
- 
+
 +static struct regval_list ov5647_1924x1084_10bpp[] = {
 +	{0x0100, 0x00},
 +	{0x0103, 0x01},
@@ -133,5 +133,5 @@ index e193fef4fced..0e877e5274da 100644
 +		.num_regs	= ARRAY_SIZE(ov5647_1924x1084_10bpp)
 +	},
  };
- 
+
  /* Default sensor mode is 2x2 binned 640x480 SBGGR10_1X10. */
